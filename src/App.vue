@@ -4,8 +4,6 @@
 
 
 <script setup>
-import Voyage from './views/Voyage.vue';
-
 </script>
 
 
