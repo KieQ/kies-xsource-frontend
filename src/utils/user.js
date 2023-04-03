@@ -1,5 +1,5 @@
 import {reactive} from "vue";
-import default_profile from "@/asserts/img/default_profile.png";
+import default_profile from "@/assets/img/default_profile.png";
 
 export const user_info = reactive({
     login: false,
