@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, reactive, watch } from 'vue';
 import bird_b_0 from "@/assets/img/flappy_bird/bird/b0.png"
 import bird_b_1 from "@/assets/img/flappy_bird/bird/b1.png"
 import bird_b_2 from "@/assets/img/flappy_bird/bird/b2.png"
@@ -16,20 +16,55 @@ import img_botpipe from "@/assets/img/flappy_bird/botpipe.png"
 import img_ground from "@/assets/img/flappy_bird/ground.png"
 import img_toppipe from "@/assets/img/flappy_bird/toppipe.png"
 import Swal from 'sweetalert2';
+import { Toast } from "@/utils/sweetalert"
+import { wasm } from "@/utils/wasm"
+import { voyage_progress } from "@/utils/voyage"
+import { after_sale_voyage_check_result } from "@/utils/backend"
 
 
-const emit = defineEmits(['to_next']);
-const score = ref(0);
+const score = reactive({
+  current:0,
+  total:0,
+})
 
 watch(score, async (newValue, oldValue)=>{
-  if(newValue > 10) {
+  if(newValue.current > 0 || newValue.total > 100) {
     paused = true;
-    await Swal.fire({
-      icon:"success",
-      text: "已通关，可进入下一关",
-      confirmButtonText: "下一关",
-    })
-    emit("to_next");
+    Swal.fire({
+      icon:"warning",
+      text: `正在检查是否通关，请稍后`,
+      didOpen: ()=>{Swal.showLoading();},
+      allowOutsideClick: () => !Swal.isLoading()
+    });
+
+    let [v, iv]  = wasm.encrypt(voyage_progress.seed.toString());
+    let result = await after_sale_voyage_check_result({
+      level: 1,
+      iv,
+      result: v,
+    });
+    Swal.close();
+    if (result.status_code !== 0) {
+        await Swal.fire({
+            icon: 'error',
+            text: `检查结果失败，原因：${result.status_message}`
+        });
+        return;
+    }
+    if (result.data !== undefined) {
+        if (!result.data.pass) {
+            await Swal.fire({
+                icon: 'warning',
+                text: `结果不正确，${result.data.fail_reason}`
+            });
+        } else {
+            await Toast.fire({
+                icon: 'success',
+                text: `结果检查通过，通往下一关按钮将出现`
+            });
+            voyage_progress.show_next_btn = true;
+        }
+    }
   }
 })
 
@@ -186,7 +221,8 @@ const bird = {
           return true;
         }
       } else if (pipe.moved) {
-        score.value++;
+        score.current++;
+        score.total++;
         pipe.moved = false;
       }
     }
@@ -213,6 +249,7 @@ onMounted(() => {
                 state.curr = state.getReady;
                 bird.speed = 0;
                 bird.y = 100;
+                score.current = 0;
                 pipe.pipes = [];
                 break;
         }
@@ -231,6 +268,7 @@ onMounted(() => {
                   state.curr = state.getReady;
                   bird.speed = 0;
                   bird.y = 100;
+                  score.current = 0;
                   pipe.pipes = [];
                   break;
           }
@@ -248,6 +286,7 @@ onMounted(() => {
                   state.curr = state.getReady;
                   bird.speed = 0;
                   bird.y = 100;
+                  score.current = 0;
                   pipe.pipes = [];
                   break;
           }

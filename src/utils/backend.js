@@ -7,7 +7,7 @@ const api = "/api"
 
 async function do_fetch(url, option){
     //TODO Debug code, delete later
-    // option = Object.assign(option||{}, {credentials:"include"})
+    option = Object.assign(option||{}, {credentials:"include"})
 
     let result = await fetch(`${api}${url}`, option)
     if(result.status !== 200){
@@ -84,3 +84,18 @@ export async function after_sale_voyage_start_over(level) {
     });
 }
 
+export async function after_sale_voyage_check_result(req){
+    return await do_fetch("/after_sale/voyage/check_result", {
+        method: "POST",
+        body: JSON.stringify(req)
+    });
+}
+
+export async function after_sale_voyage_next_step(finished_level){
+    return await do_fetch("/after_sale/voyage/next_step", {
+        method: "POST",
+        body: JSON.stringify({
+            finished_level
+        })
+    });
+}
