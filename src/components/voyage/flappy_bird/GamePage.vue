@@ -28,7 +28,7 @@ const score = reactive({
 })
 
 watch(score, async (newValue, oldValue)=>{
-  if(newValue.current > 0 || newValue.total > 100) {
+  if(newValue.current > 10 || newValue.total > 100) {
     paused = true;
     Swal.fire({
       icon:"warning",

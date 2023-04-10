@@ -30,7 +30,7 @@ async function start_show() {
     let r_num = wasm.random(voyage_progress.seed, 100);
     for (let i = 0; i < r_num.size(); i++) {
         render_number(r_num.get(i));
-        await sleep(10);
+        await sleep(1000);
     }
     render_number(undefined);
     let result = await Swal.fire({
