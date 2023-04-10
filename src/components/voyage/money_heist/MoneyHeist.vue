@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full w-full">
+    <div class="h-full w-full bg-green-800">
         <img src="https://image.tmdb.org/t/p/original/7kzMdMTGJWIIw9CHh4gqqZmD4uI.jpg" alt="请刷新后重试">
         <div class="absolute left-[60%] top-[20%] z-10">
             <button class="h-10 w-10 rounded-full opacity-0 hover:opacity-100 bg-black/50 transition-opacity duration-500 ease-in-out"
@@ -28,19 +28,17 @@ async function click_btn(){
       level: 2,
       result: result.value,
     });
-    Swal.close();
     if (result.status_code !== 0) {
         await Swal.fire({
             icon: 'error',
             text: `检查结果失败，原因：${result.status_message}`
         });
         return;
-    }
-    if (result.data !== undefined) {
+    }else if (result.data !== undefined) {
         if (!result.data.pass) {
             await Swal.fire({
                 icon: 'warning',
-                text: `结果不正确，${result.data.fail_reason}`
+                text: result.data.fail_reason
             });
         } else {
             await Toast.fire({

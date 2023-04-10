@@ -51,18 +51,8 @@
                 </div>
             </div>
             <div v-if="voyage_progress.level === 3">
-                <div class="h-screen w-screen bg-green-100">
-                    Hello
-                </div>
-            </div>
-            <div v-if="voyage_progress.level === 4">
-                <div class="h-screen w-screen bg-green-100">
-                    Hello
-                </div>
-            </div>
-            <div v-if="voyage_progress.level === 5">
-                <div class="h-screen w-screen bg-green-100">
-                    Hello
+                <div class="h-screen w-screen">
+                    <PrimeNumber></PrimeNumber>
                 </div>
             </div>
         </TransitionGroup>
@@ -83,7 +73,7 @@
 import VideoBackground from 'vue-responsive-video-background-player';
 import background_video from "@/assets/video/mountain.mp4";
 import background_poster from "@/assets/img/mountain.jpeg";
-import { user_logout, after_sale_voyage_next_step, after_sale_voyage_check_progress, after_sale_voyage_start_or_continue_trip, after_sale_voyage_start_over, after_sale_voyage_check_result } from "@/utils/backend";
+import { user_logout, after_sale_voyage_next_step, after_sale_voyage_check_progress, after_sale_voyage_start_or_continue_trip, after_sale_voyage_start_over } from "@/utils/backend";
 import { user_info } from '../utils/user';
 import { useRouter } from "vue-router";
 import { Toast } from "@/utils/sweetalert";
@@ -92,6 +82,7 @@ import { onMounted, reactive, ref } from 'vue';
 import FlappyBirdGame from "@/components/voyage/flappy_bird/FlappyBirdGame.vue"
 import MoneyHeist from '../components/voyage/money_heist/MoneyHeist.vue';
 import { voyage_progress } from "@/utils/voyage"
+import PrimeNumber from '../components/voyage/prime_number/PrimeNumber.vue';
 
 const router = useRouter();
 
@@ -130,7 +121,7 @@ async function start_or_continue_trip() {
         })
     } else {
         if (result.data !== undefined) {
-            if (result.data.passed) {
+            if (result.data.cleared) {
                 await Swal.fire({
                     text: '您已经通关，是否进入终点。',
                     icon: 'question',
@@ -199,7 +190,7 @@ async function to_next() {
         });
     } else {
         if (result.data !== undefined) {
-            if (voyage_progress.passed) {
+            if (result.data.cleared) {
                 await Swal.fire({
                     icon: "success",
                     text: "已通关",
