@@ -18,6 +18,10 @@ async function click_btn(){
     let result = await Swal.fire({
         input: 'text',
     });
+    if(!result.isConfirmed){
+        return;
+    }
+
     Swal.fire({
       icon:"warning",
       text: `正在检查是否通关，请稍后`,

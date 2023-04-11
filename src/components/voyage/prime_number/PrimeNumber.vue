@@ -67,7 +67,6 @@ async function start_show() {
                 timer: 10000,
                 timerProgressBar: true,
             });
-            window.location.reload();
         }
         else if (r.data.pass) {
             await Toast.fire({
@@ -80,6 +79,7 @@ async function start_show() {
                 text: r.data.fail_reason,
             });
         }
+        window.location.reload();
     }
 }
 
