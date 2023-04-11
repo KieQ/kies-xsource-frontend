@@ -11,7 +11,7 @@
 <script setup>
 import { voyage_progress } from "@/utils/voyage";
 import { wasm } from "@/utils/wasm";
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import Swal from 'sweetalert2';
 import { after_sale_voyage_check_result } from '@/utils/backend'
 import { Toast } from '@/utils/sweetalert'
@@ -19,7 +19,11 @@ import { useRouter } from "vue-router";
 
 const show_btn = ref(true);
 const current_num = ref(undefined);
-const router = useRouter();
+
+onMounted(()=>{
+    const style = 'background-color: darkblue; color: white; font-style: italic; border: 5px solid hotpink; font-size: 2em;'
+    console.log("%c质数有多少个呢", style);
+})
 
 async function sleep(millionseconds) {
     return new Promise(resolve => setTimeout(resolve, millionseconds));
